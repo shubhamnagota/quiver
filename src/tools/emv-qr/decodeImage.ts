@@ -85,3 +85,32 @@ export function imageFrom(items: DataTransfer | null): File | null {
   for (const file of Array.from(items.files)) if (file.type.startsWith('image/')) return file;
   return null;
 }
+
+export type ClipboardContent = { kind: 'image'; file: File } | { kind: 'text'; text: string };
+
+/**
+ * Reads the clipboard after a click (the browser may ask for permission):
+ * the first image if there is one, otherwise text, so a copied payload works too.
+ */
+export async function readClipboard(clipboard: Pick<Clipboard, 'read'> = navigator.clipboard): Promise<ClipboardContent> {
+  let items: ClipboardItems;
+  try {
+    items = await clipboard.read();
+  } catch (e) {
+    if ((e as DOMException).name === 'NotAllowedError') {
+      throw new Error('Clipboard access was blocked. Allow it for this site, or press ⌘V / Ctrl+V instead.', { cause: e });
+    }
+    throw new Error("Couldn't read the clipboard. Press ⌘V / Ctrl+V instead.", { cause: e });
+  }
+  for (const item of items) {
+    const type = item.types.find((t) => t.startsWith('image/'));
+    if (type) return { kind: 'image', file: new File([await item.getType(type)], 'clipboard image', { type }) };
+  }
+  for (const item of items) {
+    if (item.types.includes('text/plain')) {
+      const text = (await (await item.getType('text/plain')).text()).trim();
+      if (text) return { kind: 'text', text };
+    }
+  }
+  throw new Error('The clipboard has no image or text. Copy a QR image first.');
+}

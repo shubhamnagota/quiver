@@ -1,5 +1,5 @@
 import { encode } from 'uqr';
-import { decodePixels, imageFrom } from './decodeImage';
+import { decodePixels, imageFrom, readClipboard } from './decodeImage';
 import { SPEC_SAMPLE } from './lib';
 
 /** Renders a QR matrix to RGBA pixels, `scale` px per module, with a quiet zone. */
@@ -39,5 +39,31 @@ describe('QR image decoding', () => {
     expect(imageFrom({ files: [txt, png] } as unknown as DataTransfer)).toBe(png);
     expect(imageFrom({ files: [txt] } as unknown as DataTransfer)).toBeNull();
     expect(imageFrom(null)).toBeNull();
+  });
+});
+
+describe('readClipboard', () => {
+  const item = (parts: Record<string, Blob>) => ({ types: Object.keys(parts), getType: async (t: string) => parts[t]! }) as unknown as ClipboardItem;
+  const board = (items: ClipboardItem[] | { fail: unknown }) => ({
+    read: async () => {
+      if ('fail' in items) throw items.fail;
+      return items;
+    },
+  });
+
+  it('prefers an image over text', async () => {
+    const png = new Blob(['x'], { type: 'image/png' });
+    const r = await readClipboard(board([item({ 'text/plain': new Blob(['hi']) }), item({ 'image/png': png })]));
+    expect(r.kind).toBe('image');
+    if (r.kind === 'image') expect(r.file.type).toBe('image/png');
+  });
+
+  it('falls back to text so a copied payload pastes too', async () => {
+    expect(await readClipboard(board([item({ 'text/plain': new Blob([' 000201 ']) })]))).toEqual({ kind: 'text', text: '000201' });
+  });
+
+  it('explains empty and blocked clipboards', async () => {
+    await expect(readClipboard(board([]))).rejects.toThrow(/no image or text/);
+    await expect(readClipboard(board({ fail: new DOMException('no', 'NotAllowedError') }))).rejects.toThrow(/blocked/);
   });
 });

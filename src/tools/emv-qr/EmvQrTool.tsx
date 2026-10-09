@@ -1,4 +1,4 @@
-import { Download, ImageUp, LoaderCircle } from 'lucide-react';
+import { ClipboardPaste, Download, ImageUp, LoaderCircle } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
 import { renderSVG } from 'uqr';
 import { CopyButton } from '@/components/CopyButton';
@@ -7,7 +7,7 @@ import { buttonClass, ErrorMessage, Panel, Segmented, Split, TextArea } from '@/
 import { useToolInput } from '@/components/tool/useToolInput';
 import { isTyping } from '@/lib/keyboard';
 import { cn } from '@/lib/utils';
-import { decodeQrImage, imageFrom } from './decodeImage';
+import { decodeQrImage, imageFrom, readClipboard } from './decodeImage';
 import { buildEmvQr, CURRENCY_NUMERIC, parseEmvQr, SPEC_SAMPLE, validateQrInput, type QrInput, type Tlv } from './lib';
 
 type Mode = 'parse' | 'generate';
@@ -47,6 +47,8 @@ function FieldList({ fields }: { fields: Tlv[] }) {
 type Upload = { state: 'decoding'; name: string } | { state: 'done'; name: string } | { state: 'error'; name: string; message: string } | null;
 
 /** Upload, drop or paste a QR image; it is decoded in the browser and never leaves the device. */
+const canReadClipboard = typeof navigator !== 'undefined' && typeof navigator.clipboard?.read === 'function';
+
 function useQrUpload(onText: (text: string) => void) {
   const [upload, setUpload] = useState<Upload>(null);
   const [dragging, setDragging] = useState(false);
@@ -84,6 +86,18 @@ function useQrUpload(onText: (text: string) => void) {
     return () => document.removeEventListener('paste', onPaste);
   }, [decode]);
 
+  /** The Paste button: reads an image (or a text payload) straight from the clipboard. */
+  const pasteFromClipboard = async () => {
+    try {
+      const content = await readClipboard();
+      if (content.kind === 'image') return void decode(content.file);
+      onTextRef.current(content.text.trim());
+      setUpload(null);
+    } catch (e) {
+      setUpload({ state: 'error', name: 'Clipboard', message: (e as Error).message });
+    }
+  };
+
   const dropProps = {
     onDragOver: (e: DragEvent) => {
       if (!Array.from(e.dataTransfer.items).some((i) => i.type.startsWith('image/'))) return;
@@ -108,6 +122,11 @@ function useQrUpload(onText: (text: string) => void) {
         {upload?.state === 'decoding' ? <LoaderCircle className="size-3.5 animate-spin" /> : <ImageUp className="size-3.5" />}
         Upload QR image
       </button>
+      {canReadClipboard && (
+        <button type="button" onClick={() => void pasteFromClipboard()} className={buttonClass} disabled={upload?.state === 'decoding'} title="Paste a copied QR image or payload (or press ⌘V)">
+          <ClipboardPaste className="size-3.5" /> Paste
+        </button>
+      )}
       <input
         ref={fileInput}
         type="file"
