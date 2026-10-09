@@ -67,5 +67,12 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    coverage: {
+      provider: 'v8',
+      // Pure logic is where bugs hide; UI is covered by the browser checks.
+      include: ['src/lib/**/*.ts', 'src/tools/**/lib.ts', 'src/tools/**/*.ts', 'src/stores/**/*.ts'],
+      exclude: ['**/*.test.ts', '**/manifest.ts', 'src/**/*.tsx'],
+      reporter: ['text-summary', 'json-summary', 'html'],
+    },
   },
 });

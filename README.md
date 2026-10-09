@@ -1,14 +1,38 @@
 # Quiver
 
-**Every tool, one keystroke away.**
+**Every tool, one keystroke away.** A private, offline toolbox for fintech engineers.
 
-Quiver is a private, offline-capable toolbox for fintech engineers: JSON, JWTs, epochs, hashes, IBANs, EMV QR codes, FX and more, all reachable from a ⌘K command palette. It runs entirely in the browser. There is no backend and no account, and tokens, payloads and keys never leave your device.
+<!-- badges -->
+[![CI](https://github.com/shubhamnagota/quiver/actions/workflows/ci.yml/badge.svg)](https://github.com/shubhamnagota/quiver/actions/workflows/ci.yml)
+[![lighthouse](https://img.shields.io/badge/lighthouse-95%20%2F%20100%20%2F%2096%20%2F%20100-brightgreen)](#quality)
+[![coverage](https://img.shields.io/badge/coverage-93%25-green)](#quality)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+<!-- /badges -->
 
-By [Shubham](https://shubhamnagota.com) · [quiver.shubhamnagota.com](https://quiver.shubhamnagota.com) · MIT licensed
+**[Open Quiver →](https://quiver.shubhamnagota.com)** · by [Shubham](https://shubhamnagota.com)
+
+Quiver puts JSON, JWTs, epochs, hashes, IBANs, EMV QR codes, FX and more behind one ⌘K command palette. It runs entirely in the browser: no backend, no account, no tracking. Tokens, payloads and keys never leave your device, and after the first visit it works offline.
+
+![⌘K, paste a JWT, and it opens decoded; the HS256 signature verifies locally](docs/demo.gif)
+
+| Dark | Light |
+| --- | --- |
+| ![Home in dark mode](docs/screenshots/home-dark.png) | ![Home in light mode](docs/screenshots/home-light.png) |
+| ![JWT decoder in dark mode](docs/screenshots/jwt-dark.png) | ![JWT decoder in light mode](docs/screenshots/jwt-light.png) |
+
+<details>
+<summary>More screenshots</summary>
+
+| | |
+| --- | --- |
+| ![EMV QR parser with a valid CRC](docs/screenshots/emv-qr.png) | ![FX converter evaluating 2500*12 AED](docs/screenshots/fx.png) |
+| ![Palette quick answer: 100 aed inr](docs/screenshots/palette.png) | ![Phone: home with widgets](docs/screenshots/phone-home.png) |
+
+</details>
 
 ## Features
 
-- **⌘K command palette** with fuzzy search over tool names and keywords; pinned and recent tools come first.
+- **⌘K command palette** with ranked search over tool names and keywords; pinned and recent tools come first.
 - **Paste to open**: paste a JWT, JSON, epoch or Base64 anywhere (or into the palette) and the right tool opens with it.
 - **Quick answers** in the palette: type an epoch to see the date, `100 aed inr` to convert, or `uuid` to copy a fresh one.
 - **Home widgets**: live world clock and the AED → INR mid-market rate.
@@ -57,14 +81,25 @@ npm run dev
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript, strict |
 | `npm test` | Vitest unit tests |
+| `npm run coverage` | Tests with a coverage report in `coverage/` |
+| `npm run badges` | Refresh the README badges from the latest coverage and Lighthouse results |
 
-CI runs lint, typecheck, tests and build on every push and pull request.
+## Quality
+
+Every push and pull request runs lint, strict typecheck, unit tests with coverage, a production build, and [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) on four pages (`lighthouserc.json`): accessibility, best practices and SEO must score 95 or higher or the build fails. Reports are attached to each run.
+
+- Unit tests cover every tool's `lib.ts` with published test vectors where they exist (EMVCo CRC sample, EIP-55, BIP173/BIP350, standard MD5/SHA/HMAC vectors).
+- Browser checks during development covered keyboard-only navigation, both themes at desktop and phone sizes with axe-core (no violations), offline use, and CSP violations (none).
 
 ## Deploying
 
-`npm run build` produces a static site in `dist/`. Production is Cloudflare Pages at [quiver.shubhamnagota.com](https://quiver.shubhamnagota.com). It deploys as is to Cloudflare Pages (headers from `public/_headers`, SPA routing built in) or Vercel (`vercel.json` adds the headers and SPA rewrite). No environment variables or server are needed.
+`npm run build` produces a static site in `dist/`; no server or environment variables are needed. Production runs on Cloudflare Pages at [quiver.shubhamnagota.com](https://quiver.shubhamnagota.com):
 
-Lighthouse (mobile, M4 build): Performance 95–99, Accessibility 100, Best Practices 100, SEO 100.
+1. Cloudflare dashboard → Workers & Pages → Create → Pages → Connect to Git → `shubhamnagota/quiver`.
+2. Build command `npm run build`, output directory `dist`, environment variable `NODE_VERSION=22`.
+3. After the first deploy: Custom domains → add `quiver.shubhamnagota.com` (Cloudflare creates the DNS record when the zone is on Cloudflare; otherwise add the CNAME it shows).
+
+Pushes to `main` deploy to production and every pull request gets a preview URL. Headers (CSP, nosniff, caching) come from `public/_headers`, and Pages serves `index.html` for app routes. The same build also deploys to Vercel as is (`vercel.json`).
 
 ## Architecture
 

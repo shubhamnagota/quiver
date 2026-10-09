@@ -13,7 +13,7 @@ interface PwaState {
 
 const standalone = () =>
   typeof window !== 'undefined' &&
-  (matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true);
+  ((typeof matchMedia === 'function' && matchMedia('(display-mode: standalone)').matches) || (navigator as { standalone?: boolean }).standalone === true);
 
 export const usePwa = create<PwaState>()((set, get) => ({
   installEvent: null,
