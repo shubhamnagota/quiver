@@ -55,6 +55,8 @@ export default defineConfig({
         globIgnores: ['og.png'],
         navigateFallback: '/index.html',
         cleanupOutdatedCaches: true,
+        // Control the page from the first visit, so later updates wait for the Reload prompt.
+        clientsClaim: true,
       },
     }),
   ],

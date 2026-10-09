@@ -11,6 +11,31 @@ export function PwaPrompts() {
     updateServiceWorker,
   } = useRegisterSW();
 
+  /**
+   * Activates the waiting worker and reloads. If the page wasn't controlled (first visit,
+   * hard refresh) the new worker is already active and nothing is waiting, so just reload;
+   * the timeout covers a worker that never reports taking control.
+   */
+  const reload = async () => {
+    const registration = await navigator.serviceWorker?.getRegistration();
+    if (!registration?.waiting) return window.location.reload();
+    setTimeout(() => window.location.reload(), 3000);
+    await updateServiceWorker(true);
+  };
+
+  // After a hard refresh the page isn't controlled, so an update activates at once with no
+  // "waiting" step. If a worker was already installed when the page loaded, a later
+  // controller change is an update: offer the reload.
+  useEffect(() => {
+    const sw = navigator.serviceWorker;
+    if (!sw || sw.controller) return;
+    let hadWorker = false;
+    void sw.getRegistration().then((r) => (hadWorker = !!r?.active));
+    const onChange = () => hadWorker && setNeedRefresh(true);
+    sw.addEventListener('controllerchange', onChange);
+    return () => sw.removeEventListener('controllerchange', onChange);
+  }, [setNeedRefresh]);
+
   useEffect(() => {
     if (!offlineReady) return;
     const t = setTimeout(() => setOfflineReady(false), 4000);
@@ -23,7 +48,7 @@ export function PwaPrompts() {
       {needRefresh ? (
         <>
           <span className="flex-1">A new version of Quiver is available.</span>
-          <button type="button" onClick={() => void updateServiceWorker(true)} className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-primary-foreground">
+          <button type="button" onClick={() => void reload()} className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-primary-foreground">
             <RefreshCw className="size-3.5" /> Reload
           </button>
         </>
