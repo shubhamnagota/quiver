@@ -8,7 +8,7 @@ export function ClockWidget() {
   const now = useNow();
 
   return (
-    <Link to="/t/$toolId" params={{ toolId: 'world-clock' }} className="block rounded-lg border border-border p-4 hover:bg-accent">
+    <Link data-nav-item to="/t/$toolId" params={{ toolId: 'world-clock' }} className="block rounded-lg border border-border p-4 hover:bg-accent">
       <p className="mb-2 text-xs text-muted-foreground">World clock</p>
       <div className="flex flex-wrap gap-x-6 gap-y-2">
         {cities.map((c) => (

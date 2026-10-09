@@ -41,7 +41,7 @@ export function OfflineBadge() {
   const online = useOnline();
   if (online) return null;
   return (
-    <span role="status" className="inline-flex items-center gap-1 rounded-full border border-amber-500/40 px-2 py-0.5 text-xs text-amber-500">
+    <span role="status" className="inline-flex items-center gap-1 rounded-full border border-warning/40 px-2 py-0.5 text-xs text-warning">
       <WifiOff className="size-3.5" /> Offline
     </span>
   );

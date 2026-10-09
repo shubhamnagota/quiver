@@ -73,7 +73,7 @@ export default function HashTool() {
               <div>
                 <input aria-label="Signature to verify" value={signature} onChange={(e) => setSignature(e.target.value)} placeholder="Webhook signature to check (hex, sha256=…, or base64)" className={inputClass} />
                 {verified !== null && (
-                  <p role="status" className={cn('mt-2 text-sm', verified ? 'text-success' : 'text-red-500')}>
+                  <p role="status" className={cn('mt-2 text-sm', verified ? 'text-success' : 'text-danger')}>
                     {verified ? 'Signature matches' : 'Signature does not match'}
                   </p>
                 )}

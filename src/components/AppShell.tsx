@@ -1,5 +1,6 @@
 import { Outlet, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { handleArrowNav } from '@/lib/arrowNav';
 import { handOff } from '@/lib/handoff';
 import { isTyping } from '@/lib/keyboard';
 import { usePalette } from '@/stores/palette';
@@ -52,8 +53,17 @@ function usePaletteLoader() {
   return open || preloaded;
 }
 
+/** Arrow keys move between items in lists, grids and toggle groups (see lib/arrowNav). */
+function useArrowNavigation() {
+  useEffect(() => {
+    document.addEventListener('keydown', handleArrowNav);
+    return () => document.removeEventListener('keydown', handleArrowNav);
+  }, []);
+}
+
 export function AppShell() {
   usePasteToOpen();
+  useArrowNavigation();
   const paletteMounted = usePaletteLoader();
   return (
     <div className="flex min-h-dvh">

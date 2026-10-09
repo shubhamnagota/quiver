@@ -16,23 +16,30 @@ function hint(field: Tlv): string | undefined {
   return undefined;
 }
 
-function FieldRows({ fields, depth = 0 }: { fields: Tlv[]; depth?: number }) {
-  return fields.map((f, i) => (
-    <tbody key={`${f.id}-${i}`}>
-      <tr className="border-t border-border align-top">
-        <td className="py-1.5 pr-3 font-mono text-xs" style={{ paddingLeft: depth * 16 }}>
-          {f.id}
-        </td>
-        <td className="py-1.5 pr-3 text-muted-foreground">{f.name ?? 'Unknown'}</td>
-        <td className="py-1.5 pr-3 font-mono text-xs text-muted-foreground">{f.length}</td>
-        <td className="py-1.5 font-mono text-xs break-all">
-          {f.children ? '' : f.value}
-          {hint(f) && <span className="ml-2 font-sans text-muted-foreground">({hint(f)})</span>}
-        </td>
-      </tr>
-      {f.children && <FieldRows fields={f.children} depth={depth + 1} />}
-    </tbody>
-  ));
+function FieldList({ fields }: { fields: Tlv[] }) {
+  return (
+    <ul className="divide-y divide-border">
+      {fields.map((f, i) => (
+        <li key={`${f.id}-${i}`} className="py-2">
+          <div className="flex items-baseline gap-2 text-sm">
+            <span className="font-mono text-xs text-muted-foreground">{f.id}</span>
+            <span className="min-w-0 flex-1">{f.name ?? 'Unknown'}</span>
+            <span className="shrink-0 font-mono text-xs text-muted-foreground" title="Length">{f.length}</span>
+          </div>
+          {f.children ? (
+            <div className="mt-1 ml-1 border-l-2 border-border pl-3">
+              <FieldList fields={f.children} />
+            </div>
+          ) : (
+            <p className="mt-0.5 font-mono text-sm [overflow-wrap:anywhere]">
+              {f.value}
+              {hint(f) && <span className="ml-2 font-sans text-xs text-muted-foreground">{hint(f)}</span>}
+            </p>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function Parser() {
@@ -64,25 +71,13 @@ function Parser() {
         <Panel
           title="Fields"
           actions={qr && (
-            <span className={cn('rounded-full border px-2 py-0.5 text-xs', qr.crc.valid ? 'border-success/40 text-success' : 'border-red-500/40 text-red-500')}>
+            <span className={cn('rounded-full border px-2 py-0.5 text-xs', qr.crc.valid ? 'border-success/40 text-success' : 'border-danger/40 text-danger')}>
               {qr.crc.valid ? `CRC ${qr.crc.actual} valid` : `CRC ${qr.crc.actual ?? 'missing'} ≠ ${qr.crc.expected}`}
             </span>
           )}
         >
           {qr ? (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="text-xs text-muted-foreground">
-                  <tr>
-                    <th className="py-1 pr-3 font-normal">ID</th>
-                    <th className="py-1 pr-3 font-normal">Field</th>
-                    <th className="py-1 pr-3 font-normal">Len</th>
-                    <th className="py-1 font-normal">Value</th>
-                  </tr>
-                </thead>
-                <FieldRows fields={qr.fields} />
-              </table>
-            </div>
+            <FieldList fields={qr.fields} />
           ) : (
             <p className="text-sm text-muted-foreground">Paste a merchant-presented EMV QR payload to see its fields.</p>
           )}

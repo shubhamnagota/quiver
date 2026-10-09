@@ -8,7 +8,7 @@ export function CategoryPage({ category }: { category: string }) {
   const meta = CATEGORIES[category as Category];
   const list = toolsInCategory(category as Category);
   return (
-    <div>
+    <div data-arrow-nav="grid">
       <h1 className="text-2xl font-semibold tracking-tight">{meta.label}</h1>
       <p className="mb-6 text-muted-foreground">{meta.description}</p>
       {list.length === 0 ? (

@@ -6,7 +6,7 @@ import type { ToolManifest } from '@/tools/types';
 export function Saved() {
   const favorites = usePrefs((s) => s.favorites).map(getTool).filter((t): t is ToolManifest => !!t);
   return (
-    <div>
+    <div data-arrow-nav="grid">
       <h1 className="mb-4 text-2xl font-semibold tracking-tight">Saved tools</h1>
       {favorites.length === 0 ? (
         <p className="text-muted-foreground">Star a tool to save it here.</p>

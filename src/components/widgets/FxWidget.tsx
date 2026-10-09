@@ -19,7 +19,7 @@ export function FxWidget({ from = 'AED', to = 'INR' }: { from?: string; to?: str
   }
 
   return (
-    <Link to="/t/$toolId" params={{ toolId: 'fx' }} className="block rounded-lg border border-border p-4 hover:bg-accent">
+    <Link data-nav-item to="/t/$toolId" params={{ toolId: 'fx' }} className="block rounded-lg border border-border p-4 hover:bg-accent">
       <p className="mb-2 text-xs text-muted-foreground">{from} → {to} mid-market</p>
       <p className="font-mono text-2xl tabular-nums">{rate ? formatRate(rate) : loading ? '…' : '—'}</p>
       <p className="text-xs text-muted-foreground">

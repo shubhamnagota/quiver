@@ -45,7 +45,7 @@ export default function RemittanceTool() {
           <label className="text-sm">
             <span className="block text-muted-foreground">You send</span>
             <span className="mt-1 flex gap-2">
-              <input aria-label="Send amount" inputMode="decimal" value={send} onChange={(e) => set({ send: e.target.value })} className={cn(field, 'w-36 text-base')} />
+              <input aria-label="Send amount" inputMode="decimal" value={send} onChange={(e) => set({ send: e.target.value })} className={cn(field, 'w-36')} />
               <CurrencyInput value={sendCurrency} onChange={(c) => set({ sendCurrency: c })} label="Send currency" />
             </span>
           </label>
@@ -57,7 +57,7 @@ export default function RemittanceTool() {
           </label>
           <div className="text-sm">
             <span className="block text-muted-foreground">Mid-market</span>
-            <span className="mt-1 block font-mono text-base">
+            <span className="mt-1 block py-1.5 font-mono">
               {mid ? `1 ${sendCurrency} = ${formatRate(mid)} ${receiveCurrency}` : '—'}
             </span>
           </div>
@@ -106,15 +106,16 @@ export default function RemittanceTool() {
                   <div className="flex justify-between"><dt className="text-muted-foreground">Received</dt><dd className="font-mono font-medium">{formatAmount(r.received, receiveCurrency)}</dd></div>
                   <div className="flex justify-between"><dt className="text-muted-foreground">Effective rate</dt><dd className="font-mono">{formatRate(r.effectiveRate)}</dd></div>
                   <div className="flex justify-between"><dt className="text-muted-foreground">Fees</dt><dd className="font-mono">{formatAmount(r.totalFee, sendCurrency)}</dd></div>
-                  <div className="flex justify-between">
-                    <dt className="text-muted-foreground">Markup vs mid</dt>
-                    <dd className={cn('font-mono', r.markupPct > 0 ? 'text-amber-500' : 'text-success')}>
-                      {r.markupPct.toFixed(2)}% · {formatAmount(r.costInSend, sendCurrency)} {sendCurrency}
+                  <div className="flex justify-between gap-2">
+                    <dt className="text-muted-foreground" title="Cost compared with the mid-market rate">Markup</dt>
+                    <dd className={cn('text-right font-mono', r.markupPct > 0 ? 'text-warning' : 'text-success')}>
+                      {r.markupPct.toFixed(2)}%
+                      <span className="block text-xs">{formatAmount(r.costInSend, sendCurrency)} {sendCurrency}</span>
                     </dd>
                   </div>
                 </dl>
               )}
-              {r && 'error' in r && q.rate && <p className="mt-3 text-sm text-red-500">{r.error}</p>}
+              {r && 'error' in r && q.rate && <p className="mt-3 text-sm text-danger">{r.error}</p>}
             </section>
           );
         })}

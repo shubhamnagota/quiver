@@ -57,16 +57,16 @@ export function ActionsBar({
   };
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-2">
-      <CopyButton value={output} />
-      <button type="button" onClick={onClear} className={buttonClass} disabled={!input}>
+    <div data-arrow-nav="horizontal" aria-label="Tool actions" role="toolbar" className="mb-4 flex flex-wrap items-center gap-2">
+      <CopyButton value={output} data-nav-item />
+      <button type="button" data-nav-item onClick={onClear} className={buttonClass} disabled={!input}>
         <Eraser className="size-3.5" /> Clear
       </button>
-      <button type="button" onClick={share} className={buttonClass} disabled={!input}>
+      <button type="button" data-nav-item onClick={share} className={buttonClass} disabled={!input}>
         <Link2 className="size-3.5" /> {shared ? 'Link copied' : 'Share link'}
       </button>
       {onSample && (
-        <button type="button" onClick={onSample} className={buttonClass}>
+        <button type="button" data-nav-item onClick={onSample} className={buttonClass}>
           <FlaskConical className="size-3.5" /> Sample input
         </button>
       )}

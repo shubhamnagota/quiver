@@ -16,7 +16,7 @@ export function Home() {
   const setOpen = usePalette((s) => s.setOpen);
 
   return (
-    <div className="space-y-10">
+    <div data-arrow-nav="grid" className="space-y-10">
       <section>
         <h1 className="text-2xl font-semibold tracking-tight">Every tool, one keystroke away.</h1>
         <p className="mt-1 text-muted-foreground">

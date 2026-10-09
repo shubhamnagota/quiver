@@ -3,8 +3,8 @@ import type { Json } from './lib';
 function Leaf({ value }: { value: Json }) {
   if (value === null) return <span className="text-muted-foreground">null</span>;
   if (typeof value === 'string') return <span className="text-success">"{value}"</span>;
-  if (typeof value === 'number') return <span className="text-sky-500">{value}</span>;
-  return <span className="text-amber-500">{String(value)}</span>;
+  if (typeof value === 'number') return <span className="text-info">{value}</span>;
+  return <span className="text-warning">{String(value)}</span>;
 }
 
 function Node({ name, value, depth }: { name?: string; value: Json; depth: number }) {

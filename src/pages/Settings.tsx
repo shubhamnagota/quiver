@@ -51,6 +51,7 @@ export function Settings() {
               type="button"
               role="radio"
               aria-checked={theme === value}
+              tabIndex={theme === value ? 0 : -1}
               onClick={() => setTheme(value)}
               className={cn(
                 'inline-flex items-center gap-2 rounded px-3 py-1.5 text-sm',
@@ -74,11 +75,11 @@ export function Settings() {
         <p className="mb-3 text-sm text-muted-foreground">
           Settings live only in this browser. Export them to move to another device.
         </p>
-        <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={exportSettings} className={buttonClass}>
+        <div data-arrow-nav="horizontal" className="flex flex-wrap gap-2">
+          <button type="button" data-nav-item onClick={exportSettings} className={buttonClass}>
             <Download className="size-4" /> Export
           </button>
-          <button type="button" onClick={() => fileInput.current?.click()} className={buttonClass}>
+          <button type="button" data-nav-item onClick={() => fileInput.current?.click()} className={buttonClass}>
             <Upload className="size-4" /> Import
           </button>
           <input
@@ -94,6 +95,7 @@ export function Settings() {
           />
           <button
             type="button"
+            data-nav-item
             onClick={() => {
               if (confirm('Clear all Quiver data in this browser, including scratchpads?')) {
                 reset();
@@ -103,7 +105,7 @@ export function Settings() {
                 location.reload();
               }
             }}
-            className={cn(buttonClass, 'text-red-500')}
+            className={cn(buttonClass, 'text-danger')}
           >
             <Trash2 className="size-4" /> Clear local data
           </button>

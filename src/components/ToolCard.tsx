@@ -9,8 +9,8 @@ export function ToolCard({ tool }: { tool: ToolManifest }) {
   const toggleFavorite = usePrefs((s) => s.toggleFavorite);
 
   return (
-    <div className="group relative rounded-lg border border-border p-4 transition-colors hover:bg-accent">
-      <Link to="/t/$toolId" params={{ toolId: tool.id }} className="block after:absolute after:inset-0">
+    <div className="group relative rounded-lg border border-border p-4 transition-colors hover:bg-accent has-[a:focus-visible]:bg-accent has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-ring">
+      <Link data-nav-item to="/t/$toolId" params={{ toolId: tool.id }} className="block outline-none after:absolute after:inset-0">
         <div className="flex items-center gap-2 font-medium">
           <CategoryIcon category={tool.category} className="size-4 text-muted-foreground" />
           {tool.name}

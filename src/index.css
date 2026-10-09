@@ -6,13 +6,19 @@
   --background: oklch(0.99 0 0);
   --foreground: oklch(0.21 0.006 285.9);
   --muted: oklch(0.967 0.001 286.4);
-  --muted-foreground: oklch(0.552 0.016 285.9);
+  --muted-foreground: oklch(0.5 0.016 285.9);
   --border: oklch(0.92 0.004 286.3);
   --accent: oklch(0.967 0.001 286.4);
   --primary: oklch(0.541 0.247 293);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.606 0.25 292.7);
-  --success: oklch(0.6 0.15 155);
+  /* Status colours: AA contrast (4.5:1) as text on the background in each theme. */
+  --success: oklch(0.52 0.14 155);
+  --warning: oklch(0.55 0.13 65);
+  --danger: oklch(0.53 0.2 27);
+  --info: oklch(0.52 0.13 240);
+  --scrollbar: oklch(0.8 0.006 286);
+  color-scheme: light;
 }
 
 .dark {
@@ -26,6 +32,11 @@
   --primary-foreground: oklch(0.141 0.005 285.8);
   --ring: oklch(0.702 0.183 293.5);
   --success: oklch(0.75 0.15 155);
+  --warning: oklch(0.82 0.16 80);
+  --danger: oklch(0.7 0.19 22);
+  --info: oklch(0.75 0.13 235);
+  --scrollbar: oklch(0.37 0.01 286);
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -39,6 +50,9 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-ring: var(--ring);
   --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
 }
 
 @layer base {
@@ -51,5 +65,26 @@
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
+  }
+  /* Thin, theme-coloured scrollbars instead of the browser's default gutter. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }

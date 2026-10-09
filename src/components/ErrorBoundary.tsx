@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (!error) return this.props.children;
     const chunk = isChunkError(error);
     return (
-      <div role="alert" className="rounded-lg border border-red-500/40 bg-red-500/5 p-6">
+      <div role="alert" className="rounded-lg border border-danger/40 bg-danger/5 p-6">
         <h2 className="font-medium">{chunk ? "This tool couldn't load" : 'Something went wrong in this tool'}</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           {chunk

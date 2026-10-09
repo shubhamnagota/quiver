@@ -44,7 +44,7 @@ function PairCard({ pair, onRemove }: { pair: Pair; onRemove: () => void }) {
     error = (e as Error).message;
   }
   let body: ReactNode = <p className="text-sm text-muted-foreground">—</p>;
-  if (error) body = <p className="text-sm text-red-500">{error}</p>;
+  if (error) body = <p className="text-sm text-danger">{error}</p>;
   else if (rates) {
     body = (
       <>
@@ -121,7 +121,7 @@ export default function FxTool() {
                 <li key={code} className="flex items-center gap-3 py-2">
                   <span className="w-12 font-mono text-sm" title={currencyName(code)}>{code}</span>
                   {row?.error ? (
-                    <span className="flex-1 text-sm text-red-500">{row.error}</span>
+                    <span className="flex-1 text-sm text-danger">{row.error}</span>
                   ) : (
                     <span className="flex-1 font-mono text-lg">{row?.value !== undefined ? formatAmount(row.value, code) : '—'}</span>
                   )}

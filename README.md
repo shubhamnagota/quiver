@@ -14,9 +14,9 @@ By [Shubham](https://github.com/shubhamnagota) · MIT licensed
 - **Home widgets**: live world clock and the AED → INR mid-market rate.
 - **Shareable links**: tool input lives in the URL, except for sensitive tools (JWT, hashes, scratchpad) unless you choose to share.
 - **Pinned and recent tools** on the home screen, persisted locally.
-- **Keyboard first**: ⌘K opens the palette, Esc goes back, ⌘C copies a tool's output.
+- **Keyboard first**: ⌘K opens the palette, Esc goes back, ⌘C copies a tool's output. Arrow keys move through the sidebar, tool grids and toolbars (→/← hop between sidebar and page, Home/End jump to the ends), and switch options in toggle groups.
 - **Installable and offline**: a PWA that precaches every tool, so everything except live FX rates works with no connection after the first visit.
-- **Dark and light themes**, following the system by choice.
+- **Dark and light themes**, following the system by choice, with WCAG AA contrast in both (checked with axe-core).
 - **Settings export/import** as JSON; nothing syncs anywhere.
 
 ## Tools

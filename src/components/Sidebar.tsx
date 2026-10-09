@@ -10,9 +10,9 @@ import { InstallApp } from './InstallApp';
 import { OfflineBadge } from './PwaPrompts';
 import { Logo } from './Logo';
 
+// TanStack Router marks the current route with data-status="active".
 const linkClass =
-  'block truncate rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground';
-const activeProps = { className: 'bg-accent text-foreground' };
+  'block truncate rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground data-[status=active]:bg-accent data-[status=active]:text-foreground';
 
 export function Sidebar() {
   const setOpen = usePalette((s) => s.setOpen);
@@ -21,7 +21,7 @@ export function Sidebar() {
     .filter((t): t is ToolManifest => !!t);
 
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-border md:flex">
+    <aside data-arrow-nav="list" data-nav-region="sidebar" className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-border md:flex">
       <div className="p-4">
         <div className="flex items-center justify-between">
           <Logo />
@@ -29,6 +29,7 @@ export function Sidebar() {
         </div>
         <button
           type="button"
+          data-nav-item
           onClick={() => setOpen(true)}
           className="mt-4 flex w-full items-center gap-2 rounded-md border border-border px-3 py-2 text-sm text-muted-foreground hover:bg-accent"
         >
@@ -45,7 +46,7 @@ export function Sidebar() {
               <Star className="size-3.5" /> Favorites
             </h2>
             {favorites.map((tool) => (
-              <Link key={tool.id} to="/t/$toolId" params={{ toolId: tool.id }} className={linkClass} activeProps={activeProps}>
+              <Link key={tool.id} data-nav-item to="/t/$toolId" params={{ toolId: tool.id }} className={linkClass}>
                 {tool.name}
               </Link>
             ))}
@@ -57,6 +58,7 @@ export function Sidebar() {
           return (
             <section key={category}>
               <Link
+                data-nav-item
                 to="/c/$category"
                 params={{ category }}
                 className="mb-1 flex items-center gap-2 px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase hover:text-foreground"
@@ -65,7 +67,7 @@ export function Sidebar() {
                 {CATEGORIES[category].label}
               </Link>
               {list.map((tool) => (
-                <Link key={tool.id} to="/t/$toolId" params={{ toolId: tool.id }} className={linkClass} activeProps={activeProps}>
+                <Link key={tool.id} data-nav-item to="/t/$toolId" params={{ toolId: tool.id }} className={linkClass}>
                   {tool.name}
                 </Link>
               ))}
@@ -75,7 +77,7 @@ export function Sidebar() {
       </nav>
 
       <div className="space-y-4 border-t border-border p-4">
-        <Link to="/settings" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+        <Link data-nav-item to="/settings" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <Settings className="size-4" /> Settings
         </Link>
         <InstallApp compact />

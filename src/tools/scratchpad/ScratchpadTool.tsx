@@ -26,11 +26,12 @@ export default function ScratchpadTool() {
           </button>
         }
       >
-        <ul className="flex gap-1 overflow-x-auto lg:flex-col">
+        <ul data-arrow-nav="grid" className="flex gap-1 overflow-x-auto lg:flex-col">
           {sorted.map((p) => (
             <li key={p.id}>
               <button
                 type="button"
+                data-nav-item
                 onClick={() => select(p.id)}
                 aria-current={p.id === pad.id}
                 className={cn(

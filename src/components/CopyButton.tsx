@@ -2,7 +2,7 @@ import { Check, Copy } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
-export function CopyButton({ value, className }: { value: string; className?: string }) {
+export function CopyButton({ value, className, ...rest }: { value: string; className?: string; 'data-nav-item'?: boolean }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -14,6 +14,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
   return (
     <button
       type="button"
+      {...rest}
       onClick={async () => {
         await navigator.clipboard.writeText(value);
         setCopied(true);

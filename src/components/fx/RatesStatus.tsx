@@ -25,7 +25,7 @@ export function RatesStatus() {
       · fetched {relativeTime(snapshot.fetchedAt, now)}
       {loading && ' · refreshing…'}
       {stale && !loading && (
-        <span className="ml-2 rounded-full border border-amber-500/40 px-1.5 text-amber-500">stale{error ? ', offline' : ''}</span>
+        <span className="ml-2 rounded-full border border-warning/40 px-1.5 text-warning">stale{error ? ', offline' : ''}</span>
       )}
     </p>
   );

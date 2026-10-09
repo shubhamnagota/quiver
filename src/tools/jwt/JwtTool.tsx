@@ -8,8 +8,8 @@ import { decodeJwt, isHmacAlg, SAMPLE, TIME_CLAIMS, tokenStatus, verifyHmac, typ
 
 const STATUS = {
   valid: { label: 'Valid', className: 'border-success/40 text-success' },
-  expired: { label: 'Expired', className: 'border-red-500/40 text-red-500' },
-  'not-yet-valid': { label: 'Not yet valid', className: 'border-amber-500/40 text-amber-500' },
+  expired: { label: 'Expired', className: 'border-danger/40 text-danger' },
+  'not-yet-valid': { label: 'Not yet valid', className: 'border-warning/40 text-warning' },
   'no-expiry': { label: 'No expiry', className: 'border-border text-muted-foreground' },
 };
 
@@ -46,7 +46,7 @@ function Verify({ token }: { token: DecodedJwt }) {
         className="w-full rounded-md border border-border bg-transparent px-3 py-1.5 font-mono text-sm"
       />
       {shown && 'ok' in shown && (
-        <p role="status" className={cn('text-sm', shown.ok ? 'text-success' : 'text-red-500')}>
+        <p role="status" className={cn('text-sm', shown.ok ? 'text-success' : 'text-danger')}>
           {shown.ok ? 'Signature verified' : 'Invalid signature'}
         </p>
       )}

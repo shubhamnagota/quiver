@@ -10,6 +10,8 @@ export function ThemeSync() {
     const apply = () => {
       const dark = theme === 'dark' || (theme === 'system' && media.matches);
       document.documentElement.classList.toggle('dark', dark);
+      // Match the browser UI (address bar, PWA title bar) to the theme.
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#09090b' : '#fcfcfc');
     };
     apply();
     media.addEventListener('change', apply);

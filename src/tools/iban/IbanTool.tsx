@@ -1,21 +1,9 @@
 import { useMemo } from 'react';
-import { CopyButton } from '@/components/CopyButton';
 import { ActionsBar } from '@/components/tool/ActionsBar';
-import { ErrorMessage, Panel, Split } from '@/components/tool/Panel';
+import { ErrorMessage, Panel, Split, ValueRow } from '@/components/tool/Panel';
 import { useToolInput } from '@/components/tool/useToolInput';
 import { cn } from '@/lib/utils';
 import { validateIban } from './lib';
-
-function Row({ label, value, copy }: { label: string; value?: string; copy?: boolean }) {
-  if (!value) return null;
-  return (
-    <div className="flex items-center gap-3 border-t border-border py-2 first:border-t-0">
-      <span className="w-32 shrink-0 text-sm text-muted-foreground">{label}</span>
-      <span className="min-w-0 flex-1 font-mono text-sm break-all">{value}</span>
-      {copy && <CopyButton value={value} />}
-    </div>
-  );
-}
 
 export default function IbanTool() {
   const [input, setInput] = useToolInput('iban');
@@ -38,27 +26,27 @@ export default function IbanTool() {
           {result && (
             <div className="mt-3 space-y-2">
               {result.errors.map((e) => <ErrorMessage key={e}>{e}</ErrorMessage>)}
-              {result.warnings.map((w) => <p key={w} className="text-sm text-amber-500">{w}</p>)}
+              {result.warnings.map((w) => <p key={w} className="text-sm text-warning">{w}</p>)}
             </div>
           )}
         </Panel>
         <Panel
           title="Details"
           actions={result && (
-            <span className={cn('rounded-full border px-2 py-0.5 text-xs', result.valid ? 'border-success/40 text-success' : 'border-red-500/40 text-red-500')}>
+            <span className={cn('rounded-full border px-2 py-0.5 text-xs', result.valid ? 'border-success/40 text-success' : 'border-danger/40 text-danger')}>
               {result.valid ? 'Valid IBAN' : 'Invalid'}
             </span>
           )}
         >
           {result ? (
             <div>
-              <Row label="Formatted" value={result.formatted} copy />
-              <Row label="Electronic" value={result.iban} copy />
-              <Row label="Country" value={result.countryName ? `${result.countryName} (${result.country})` : result.country} />
-              <Row label="Check digits" value={result.checkDigits} />
-              <Row label="Bank code" value={result.bankCode} />
-              <Row label={result.branchLabel ?? 'Branch code'} value={result.branchCode} />
-              <Row label="BBAN" value={result.bban} />
+              <ValueRow label="Formatted" value={result.formatted} copy />
+              <ValueRow label="Electronic" value={result.iban} copy />
+              <ValueRow label="Country" value={result.countryName ? `${result.countryName} (${result.country})` : result.country} />
+              <ValueRow label="Check digits" value={result.checkDigits} />
+              <ValueRow label="Bank code" value={result.bankCode} />
+              <ValueRow label={result.branchLabel ?? 'Branch code'} value={result.branchCode} />
+              <ValueRow label="BBAN" value={result.bban} />
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">Enter an IBAN with or without spaces.</p>

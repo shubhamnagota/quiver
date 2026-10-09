@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { CopyButton } from '@/components/CopyButton';
 import { cn } from '@/lib/utils';
 
 export function Panel({
@@ -59,7 +60,7 @@ export function TextArea({
       autoCorrect="off"
       className={cn(
         'block w-full resize-y rounded-md border border-border bg-transparent p-3 font-mono text-sm leading-6',
-        invalid && 'border-red-500/70',
+        invalid && 'border-danger/70',
       )}
     />
   );
@@ -80,7 +81,7 @@ export function Output({ value, label = 'Output' }: { value: string; label?: str
 
 export function ErrorMessage({ children }: { children: ReactNode }) {
   return (
-    <p role="alert" className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-500">
+    <p role="alert" className="rounded-md border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger">
       {children}
     </p>
   );
@@ -118,6 +119,7 @@ export function Segmented<T extends string>({
           type="button"
           role="radio"
           aria-checked={value === o.value}
+          tabIndex={value === o.value ? 0 : -1}
           onClick={() => onChange(o.value)}
           className={cn(
             'rounded px-2.5 py-1 text-xs',
@@ -127,6 +129,20 @@ export function Segmented<T extends string>({
           {o.label}
         </button>
       ))}
+    </div>
+  );
+}
+
+/** A labelled value with an optional copy button. Stacks on phones; wraps at spaces before breaking words. */
+export function ValueRow({ label, value, copy }: { label: string; value?: string; copy?: boolean }) {
+  if (!value) return null;
+  return (
+    <div className="flex items-start gap-3 border-t border-border py-2 first:border-t-0">
+      <div className="min-w-0 flex-1 sm:flex sm:gap-3">
+        <span className="block text-sm text-muted-foreground sm:w-28 sm:shrink-0 sm:pt-0.5">{label}</span>
+        <span className="block min-w-0 font-mono text-sm break-words">{value}</span>
+      </div>
+      {copy && <CopyButton value={value} className="shrink-0" />}
     </div>
   );
 }
