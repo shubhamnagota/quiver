@@ -4,7 +4,7 @@
 
 <!-- badges -->
 [![CI](https://github.com/shubhamnagota/quiver/actions/workflows/ci.yml/badge.svg)](https://github.com/shubhamnagota/quiver/actions/workflows/ci.yml)
-[![lighthouse](https://img.shields.io/badge/lighthouse-95%20%2F%20100%20%2F%2096%20%2F%20100-brightgreen)](#quality)
+[![PageSpeed (mobile)](https://img.shields.io/badge/PageSpeed%20(mobile)-100%20%2F%20100%20%2F%20100%20%2F%20100-brightgreen)](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fquiver.shubhamnagota.com%2F&form_factor=mobile)
 [![coverage](https://img.shields.io/badge/coverage-93%25-green)](#quality)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 <!-- /badges -->
@@ -85,6 +85,8 @@ npm run dev
 | `npm run badges` | Refresh the README badges from the latest coverage and Lighthouse results |
 
 ## Quality
+
+The live site scores 100 in all four Lighthouse categories on [PageSpeed Insights](https://pagespeed.web.dev/analysis?url=https%3A%2F%2Fquiver.shubhamnagota.com%2F&form_factor=mobile) (mobile, slow 4G): first contentful paint 1.4 s, total blocking time 0 ms, layout shift 0.
 
 Every push and pull request runs lint, strict typecheck, unit tests with coverage, a production build, and [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) on four pages (`lighthouserc.json`): accessibility, best practices and SEO must score 95 or higher or the build fails. Reports are attached to each run.
 
