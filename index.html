@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="author" content="Shubham" />
+    <meta name="description" content="Quiver — a private dev and fintech toolbox by Shubham." />
+    <meta name="theme-color" content="#09090b" />
+    <meta property="og:title" content="Quiver" />
+    <meta property="og:description" content="Every tool, one keystroke away. Quiver by Shubham." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Quiver</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        const prefs = JSON.parse(localStorage.getItem('quiver-prefs') || '{}').state || {};
+        const theme = prefs.theme || 'system';
+        const dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', dark);
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
