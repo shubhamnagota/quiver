@@ -6,6 +6,8 @@ import { getTool, toolsInCategory } from '@/tools/registry';
 import { CATEGORIES, type Category, type ToolManifest } from '@/tools/types';
 import { CategoryIcon } from './CategoryIcon';
 import { Footer } from './Credits';
+import { InstallApp } from './InstallApp';
+import { OfflineBadge } from './PwaPrompts';
 import { Logo } from './Logo';
 
 const linkClass =
@@ -21,7 +23,10 @@ export function Sidebar() {
   return (
     <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-border md:flex">
       <div className="p-4">
-        <Logo />
+        <div className="flex items-center justify-between">
+          <Logo />
+          <OfflineBadge />
+        </div>
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -73,6 +78,7 @@ export function Sidebar() {
         <Link to="/settings" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <Settings className="size-4" /> Settings
         </Link>
+        <InstallApp compact />
         <Footer />
       </div>
     </aside>

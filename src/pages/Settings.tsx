@@ -1,6 +1,7 @@
 import { Download, Monitor, Moon, Sun, Trash2, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { SocialLinks } from '@/components/Credits';
+import { InstallApp } from '@/components/InstallApp';
 import { cn } from '@/lib/utils';
 import { usePrefs, type Theme } from '@/stores/prefs';
 
@@ -60,6 +61,12 @@ export function Settings() {
             </button>
           ))}
         </div>
+      </section>
+
+      <section>
+        <h2 className="mb-2 font-medium">Install</h2>
+        <p className="mb-3 text-sm text-muted-foreground">Installed, Quiver opens like an app and works offline.</p>
+        <InstallApp />
       </section>
 
       <section>

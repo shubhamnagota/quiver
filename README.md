@@ -15,6 +15,7 @@ By [Shubham](https://github.com/shubhamnagota) · MIT licensed
 - **Shareable links**: tool input lives in the URL, except for sensitive tools (JWT, hashes, scratchpad) unless you choose to share.
 - **Pinned and recent tools** on the home screen, persisted locally.
 - **Keyboard first**: ⌘K opens the palette, Esc goes back, ⌘C copies a tool's output.
+- **Installable and offline**: a PWA that precaches every tool, so everything except live FX rates works with no connection after the first visit.
 - **Dark and light themes**, following the system by choice.
 - **Settings export/import** as JSON; nothing syncs anywhere.
 
@@ -55,6 +56,12 @@ npm run dev
 
 CI runs lint, typecheck, tests and build on every push and pull request.
 
+## Deploying
+
+`npm run build` produces a static site in `dist/`. It deploys as is to Cloudflare Pages (headers from `public/_headers`, SPA routing built in) or Vercel (`vercel.json` adds the headers and SPA rewrite). No environment variables or server are needed.
+
+Lighthouse (mobile, M4 build): Performance 95–99, Accessibility 100, Best Practices 100, SEO 100.
+
 ## Architecture
 
 Quiver is a static single-page app built with Vite, React 19 and strict TypeScript, routed with TanStack Router and styled with Tailwind CSS. The palette is [cmdk](https://cmdk.paco.me), and settings persist to `localStorage` through Zustand.
@@ -76,6 +83,14 @@ src/
 ### FX rates
 
 FX tools fetch USD-based mid-market rates from [ExchangeRate-API](https://www.exchangerate-api.com)'s open endpoint, falling back to [Frankfurter](https://frankfurter.dev) (ECB data, with AED derived from its USD peg of 3.6725), then to the last cached snapshot. Rates are cached in `localStorage` for 6 hours, shown immediately while refreshing in the background, and fetched at most once an hour. Every pair is computed locally from the USD base. No API keys are involved.
+
+### Offline and install
+
+[vite-plugin-pwa](https://vite-pwa-org.netlify.app) generates a Workbox service worker that precaches the shell and every tool chunk. New versions show an "Update available" prompt instead of swapping code under you. Chrome, Edge and Android offer an install button (sidebar and Settings); on iOS, Settings explains Share → Add to Home Screen.
+
+### Security headers
+
+`csp.ts` is the single source of truth for the Content Security Policy: no third-party scripts, no inline scripts except the theme bootstrap (allowed by its SHA-256 hash), and `connect-src` limited to the two FX hosts. Builds embed it as a meta tag; `public/_headers` (Cloudflare Pages, Netlify) and `vercel.json` send it as a header with `frame-ancestors 'none'`, and a unit test keeps all three in sync.
 
 ### Privacy model
 

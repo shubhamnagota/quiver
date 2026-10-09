@@ -6,6 +6,7 @@ import { usePalette } from '@/stores/palette';
 import { usePrefs } from '@/stores/prefs';
 import { getTool, tools } from '@/tools/registry';
 import { CATEGORIES } from '@/tools/types';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { NotFound } from './NotFound';
 
 // One lazy component per tool, created once so each tool's chunk loads on first visit only.
@@ -64,10 +65,12 @@ export function ToolPage({ toolId }: { toolId: string }) {
           <Star className="size-5" fill={favorite ? 'currentColor' : 'none'} />
         </button>
       </div>
-      <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
-        {/* Tool components are created once at module load, so their identity is stable across renders. */}
-        {createElement(Tool)}
-      </Suspense>
+      <ErrorBoundary resetKey={toolId}>
+        <Suspense fallback={<p className="text-sm text-muted-foreground">Loading…</p>}>
+          {/* Tool components are created once at module load, so their identity is stable across renders. */}
+          {createElement(Tool)}
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

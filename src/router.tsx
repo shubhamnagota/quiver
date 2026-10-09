@@ -1,15 +1,13 @@
-import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
+import { createRootRoute, createRoute, createRouter, lazyRouteComponent } from '@tanstack/react-router';
 import { AppShell } from './components/AppShell';
 import { parseSearch, stringifySearch } from './lib/search';
-import { About } from './pages/About';
 import { CategoryPage } from './pages/CategoryPage';
 import { Home } from './pages/Home';
 import { NotFound } from './pages/NotFound';
-import { Saved } from './pages/Saved';
-import { Settings } from './pages/Settings';
+import { RouteError } from './pages/RouteError';
 import { ToolPage } from './pages/ToolPage';
 
-const rootRoute = createRootRoute({ component: AppShell, notFoundComponent: NotFound });
+const rootRoute = createRootRoute({ component: AppShell, notFoundComponent: NotFound, errorComponent: RouteError });
 
 const homeRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', component: Home });
 
@@ -33,9 +31,9 @@ const categoryRoute = createRoute({
   },
 });
 
-const savedRoute = createRoute({ getParentRoute: () => rootRoute, path: '/saved', component: Saved });
-const settingsRoute = createRoute({ getParentRoute: () => rootRoute, path: '/settings', component: Settings });
-const aboutRoute = createRoute({ getParentRoute: () => rootRoute, path: '/about', component: About });
+const savedRoute = createRoute({ getParentRoute: () => rootRoute, path: '/saved', component: lazyRouteComponent(() => import('./pages/Saved'), 'Saved') });
+const settingsRoute = createRoute({ getParentRoute: () => rootRoute, path: '/settings', component: lazyRouteComponent(() => import('./pages/Settings'), 'Settings') });
+const aboutRoute = createRoute({ getParentRoute: () => rootRoute, path: '/about', component: lazyRouteComponent(() => import('./pages/About'), 'About') });
 
 const routeTree = rootRoute.addChildren([
   homeRoute,

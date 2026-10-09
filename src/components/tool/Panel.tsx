@@ -68,7 +68,9 @@ export function TextArea({
 export function Output({ value, label = 'Output' }: { value: string; label?: string }) {
   return (
     <pre
+      role="region"
       aria-label={label}
+      tabIndex={0}
       className="max-h-[32rem] min-h-24 overflow-auto font-mono text-sm leading-6 break-all whitespace-pre-wrap"
     >
       {value}

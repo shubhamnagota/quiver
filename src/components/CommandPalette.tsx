@@ -1,7 +1,7 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Command } from 'cmdk';
 import { ArrowUpRight, Check, Info, House, Settings, Star, Zap } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { handOff } from '@/lib/handoff';
 import { quickAnswers } from '@/lib/quick';
 import { usePalette } from '@/stores/palette';
@@ -16,22 +16,11 @@ const groupClass =
   '[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:text-muted-foreground';
 
 export function CommandPalette() {
-  const { open, setOpen, toggle } = usePalette();
+  const { open, setOpen } = usePalette();
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const recents = usePrefs((s) => s.recents);
   const favorites = usePrefs((s) => s.favorites);
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        toggle();
-      }
-    };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [toggle]);
 
   const detected = useMemo(() => detectTools(search), [search]);
   const answers = useMemo(() => quickAnswers(search), [search]);

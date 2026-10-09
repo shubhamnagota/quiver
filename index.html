@@ -9,18 +9,18 @@
     <meta property="og:title" content="Quiver" />
     <meta property="og:description" content="Every tool, one keystroke away. Quiver by Shubham." />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="/og.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Quiver" />
     <title>Quiver</title>
-    <script>
-      // Apply the saved theme before first paint to avoid a flash.
-      try {
-        const prefs = JSON.parse(localStorage.getItem('quiver-prefs') || '{}').state || {};
-        const theme = prefs.theme || 'system';
-        const dark = theme === 'dark' || (theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-        document.documentElement.classList.toggle('dark', dark);
-      } catch {}
-    </script>
+    <!-- theme-script -->
   </head>
   <body>
     <div id="root"></div>
