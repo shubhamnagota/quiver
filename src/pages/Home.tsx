@@ -1,5 +1,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { ToolCard } from '@/components/ToolCard';
+import { ClockWidget } from '@/components/widgets/ClockWidget';
+import { FxWidget } from '@/components/widgets/FxWidget';
 import { usePalette } from '@/stores/palette';
 import { usePrefs } from '@/stores/prefs';
 import { getTool, tools } from '@/tools/registry';
@@ -24,6 +26,11 @@ export function Home() {
           </button>{' '}
           to search, or paste anything to jump straight to the right tool.
         </p>
+      </section>
+
+      <section aria-label="Widgets" className="grid gap-3 sm:grid-cols-[2fr_1fr]">
+        <ClockWidget />
+        <FxWidget />
       </section>
 
       <section aria-labelledby="pinned-heading">

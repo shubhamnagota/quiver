@@ -1,5 +1,5 @@
 import { Link, useRouter } from '@tanstack/react-router';
-import { ShieldCheck, Star } from 'lucide-react';
+import { Globe, ShieldCheck, Star } from 'lucide-react';
 import { createElement, lazy, Suspense, useEffect } from 'react';
 import { isTyping } from '@/lib/keyboard';
 import { usePalette } from '@/stores/palette';
@@ -45,7 +45,11 @@ export function ToolPage({ toolId }: { toolId: string }) {
       </div>
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">{tool.name}</h1>
-        {!tool.network && (
+        {tool.network ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
+            <Globe className="size-3.5" /> Uses public FX rates; your input stays local
+          </span>
+        ) : (
           <span className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-success">
             <ShieldCheck className="size-3.5" /> Runs locally
           </span>

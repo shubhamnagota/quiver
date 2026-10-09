@@ -10,7 +10,8 @@ By [Shubham](https://github.com/shubhamnagota) · MIT licensed
 
 - **⌘K command palette** with fuzzy search over tool names and keywords; pinned and recent tools come first.
 - **Paste to open**: paste a JWT, JSON, epoch or Base64 anywhere (or into the palette) and the right tool opens with it.
-- **Quick answers** in the palette: type an epoch to see the date, or `uuid` to copy a fresh one.
+- **Quick answers** in the palette: type an epoch to see the date, `100 aed inr` to convert, or `uuid` to copy a fresh one.
+- **Home widgets**: live world clock and the AED → INR mid-market rate.
 - **Shareable links**: tool input lives in the URL, except for sensitive tools (JWT, hashes, scratchpad) unless you choose to share.
 - **Pinned and recent tools** on the home screen, persisted locally.
 - **Keyboard first**: ⌘K opens the palette, Esc goes back, ⌘C copies a tool's output.
@@ -27,10 +28,15 @@ By [Shubham](https://github.com/shubhamnagota) · MIT licensed
 | Epoch converter | s/ms/µs/ns auto-detect, Dubai/IST/UTC side by side, relative time, date → epoch |
 | Hash and HMAC | MD5, SHA-1/256/384/512, HMAC in hex or base64, webhook signature check |
 | UUID generator | Bulk v4 UUIDs |
+| EMV QR parser | Parse merchant-presented EMV QR payloads into a field tree, verify CRC16, generate valid codes as SVG |
+| IBAN validator | mod-97 check, country length rules, bank and branch codes, grouped formatting |
+| FX converter | One amount to many currencies, math in the amount field, pinned rate pairs |
+| Remittance comparator | Up to 4 provider quotes vs mid-market: amount received, effective rate, markup |
+| World clock | Dubai and India by default, add any city, meeting planner with working-hours overlap |
 | Text utilities | Case conversion, counts, dedupe, sort, trim, slugify |
 | Scratchpad | Multiple Markdown pads with preview, autosaved in the browser |
 
-More are on the way: payments (EMV QR, IBAN), FX and remittance comparison, and a world clock.
+More are on the way: JSON diff, cron explainer, regex tester, card BIN/Luhn, QR generator and others.
 
 ## Getting started
 
@@ -67,9 +73,13 @@ src/
     …           one folder per tool
 ```
 
+### FX rates
+
+FX tools fetch USD-based mid-market rates from [ExchangeRate-API](https://www.exchangerate-api.com)'s open endpoint, falling back to [Frankfurter](https://frankfurter.dev) (ECB data, with AED derived from its USD peg of 3.6725), then to the last cached snapshot. Rates are cached in `localStorage` for 6 hours, shown immediately while refreshing in the background, and fetched at most once an hour. Every pair is computed locally from the USD base. No API keys are involved.
+
 ### Privacy model
 
-Tools process input in the browser only. A tool that makes network calls declares `network: true`; every other tool shows a "Runs locally" badge. Tools marked `sensitive` keep their input out of the URL; sharing a link from one asks first. Markdown in the scratchpad is sanitised with DOMPurify before rendering.
+Tools process input in the browser only. The only network calls are the keyless FX rate requests above, which send no user data; tools that make them declare `network: true` and say so in their badge, while every other tool shows a "Runs locally" badge. Tools marked `sensitive` keep their input out of the URL; sharing a link from one asks first. Markdown in the scratchpad is sanitised with DOMPurify before rendering.
 
 ## How to add a tool
 

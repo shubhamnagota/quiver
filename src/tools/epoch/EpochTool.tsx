@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CopyButton } from '@/components/CopyButton';
 import { ActionsBar } from '@/components/tool/ActionsBar';
 import { buttonClass, ErrorMessage, Field, Panel, selectClass, Split } from '@/components/tool/Panel';
 import { useToolInput } from '@/components/tool/useToolInput';
 import { DEFAULT_ZONES, formatInZone, relativeTime } from '@/lib/time';
+import { useNow } from '@/lib/useNow';
 import { parseTime, toUnits, UNIT_LABELS, type Unit } from './lib';
 
 function Row({ label, value }: { label: string; value: string }) {
@@ -14,15 +15,6 @@ function Row({ label, value }: { label: string; value: string }) {
       <CopyButton value={value} className="shrink-0" />
     </div>
   );
-}
-
-function useNow() {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  return now;
 }
 
 export default function EpochTool() {
