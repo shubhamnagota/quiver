@@ -1,6 +1,7 @@
 import { Link, useRouter } from '@tanstack/react-router';
 import { ShieldCheck, Star } from 'lucide-react';
 import { createElement, lazy, Suspense, useEffect } from 'react';
+import { isTyping } from '@/lib/keyboard';
 import { usePalette } from '@/stores/palette';
 import { usePrefs } from '@/stores/prefs';
 import { getTool, tools } from '@/tools/registry';
@@ -10,8 +11,6 @@ import { NotFound } from './NotFound';
 // One lazy component per tool, created once so each tool's chunk loads on first visit only.
 const toolComponents = new Map(tools.map((tool) => [tool.id, lazy(tool.component)]));
 
-const isTyping = (el: EventTarget | null) =>
-  el instanceof HTMLElement && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName));
 
 export function ToolPage({ toolId }: { toolId: string }) {
   const tool = getTool(toolId);

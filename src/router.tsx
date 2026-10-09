@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import { AppShell } from './components/AppShell';
+import { parseSearch, stringifySearch } from './lib/search';
 import { About } from './pages/About';
 import { CategoryPage } from './pages/CategoryPage';
 import { Home } from './pages/Home';
@@ -15,6 +16,8 @@ const homeRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', comp
 const toolRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/t/$toolId',
+  validateSearch: (search: Record<string, unknown>): { input?: string } =>
+    typeof search.input === 'string' ? { input: search.input } : {},
   component: function ToolRoute() {
     const { toolId } = toolRoute.useParams();
     return <ToolPage key={toolId} toolId={toolId} />;
@@ -43,7 +46,7 @@ const routeTree = rootRoute.addChildren([
   aboutRoute,
 ]);
 
-export const router = createRouter({ routeTree, defaultPreload: 'intent' });
+export const router = createRouter({ routeTree, defaultPreload: 'intent', parseSearch, stringifySearch });
 
 declare module '@tanstack/react-router' {
   interface Register {

@@ -88,9 +88,12 @@ export function Settings() {
           <button
             type="button"
             onClick={() => {
-              if (confirm('Clear all Quiver data stored in this browser?')) {
+              if (confirm('Clear all Quiver data in this browser, including scratchpads?')) {
                 reset();
-                setMessage('Local data cleared.');
+                for (const key of Object.keys(localStorage)) {
+                  if (key.startsWith('quiver-')) localStorage.removeItem(key);
+                }
+                location.reload();
               }
             }}
             className={cn(buttonClass, 'text-red-500')}

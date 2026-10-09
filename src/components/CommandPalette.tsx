@@ -1,7 +1,9 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Command } from 'cmdk';
-import { ArrowUpRight, Info, House, Settings, Star } from 'lucide-react';
+import { ArrowUpRight, Check, Info, House, Settings, Star, Zap } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { handOff } from '@/lib/handoff';
+import { quickAnswers } from '@/lib/quick';
 import { usePalette } from '@/stores/palette';
 import { usePrefs } from '@/stores/prefs';
 import { detectTools, getTool, tools } from '@/tools/registry';
@@ -32,18 +34,24 @@ export function CommandPalette() {
   }, [toggle]);
 
   const detected = useMemo(() => detectTools(search), [search]);
+  const answers = useMemo(() => quickAnswers(search), [search]);
+  const [copied, setCopied] = useState(false);
   const pinned = favorites.map(getTool).filter((t): t is ToolManifest => !!t);
   const recent = recents.map(getTool).filter((t): t is ToolManifest => !!t);
 
   const close = () => {
     setOpen(false);
     setSearch('');
+    setCopied(false);
   };
   const go = (to: string, params?: Record<string, string>) => {
     close();
     void navigate({ to, params } as never);
   };
-  const openTool = (tool: ToolManifest) => go('/t/$toolId', { toolId: tool.id });
+  const openTool = (tool: ToolManifest) => {
+    close();
+    void navigate({ to: '/t/$toolId', params: { toolId: tool.id }, search: {} });
+  };
 
   const toolItem = (tool: ToolManifest, prefix = '') => (
     <Command.Item
@@ -74,9 +82,39 @@ export function CommandPalette() {
         className="w-full border-b border-border bg-transparent px-4 py-3 text-base outline-none placeholder:text-muted-foreground"
       />
       <Command.List className="max-h-[60vh] overflow-y-auto p-2">
-        <Command.Empty className="px-3 py-6 text-center text-sm text-muted-foreground">
-          No tools found.
-        </Command.Empty>
+        {answers.length === 0 && detected.length === 0 && (
+          <Command.Empty className="px-3 py-6 text-center text-sm text-muted-foreground">
+            No tools found.
+          </Command.Empty>
+        )}
+
+        {copied && (
+          <p role="status" className="flex items-center gap-2 px-3 py-2 text-sm text-success">
+            <Check className="size-4" /> Copied to clipboard
+          </p>
+        )}
+
+        {answers.length > 0 && (
+          <Command.Group heading="Quick answer" className={groupClass} forceMount>
+            {answers.map((a) => (
+              <Command.Item
+                key={`answer-${a.id}`}
+                value={`answer-${a.id}`}
+                forceMount
+                onSelect={() => {
+                  void navigator.clipboard.writeText(a.copy());
+                  setCopied(true);
+                  setTimeout(close, 600);
+                }}
+                className={itemClass}
+              >
+                <Zap className="size-4 text-primary" />
+                <span className="truncate">{a.title}</span>
+                <span className="ml-auto truncate text-xs text-muted-foreground">{a.hint}</span>
+              </Command.Item>
+            ))}
+          </Command.Group>
+        )}
 
         {detected.length > 0 && (
           <Command.Group heading="Detected from your input" className={groupClass} forceMount>
@@ -85,7 +123,10 @@ export function CommandPalette() {
                 key={`detect-${tool.id}`}
                 value={`detect-${tool.id}`}
                 forceMount
-                onSelect={() => openTool(tool)}
+                onSelect={() => {
+                  handOff(tool.id, search.trim());
+                  openTool(tool);
+                }}
                 className={itemClass}
               >
                 <ArrowUpRight className="size-4 text-primary" />
