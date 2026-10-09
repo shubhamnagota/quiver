@@ -1,5 +1,6 @@
 import { SocialLinks } from '@/components/Credits';
-import { AUTHOR } from '@/config';
+import { AUTHOR, supportEnabled } from '@/config';
+import { Link } from '@tanstack/react-router';
 
 export function About() {
   return (
@@ -22,6 +23,11 @@ export function About() {
         <h2 className="mb-2 font-medium">Made by {AUTHOR.name}</h2>
         <p className="mb-3 text-muted-foreground">
           Source on <a href={AUTHOR.repo} target="_blank" rel="noreferrer" className="underline">GitHub</a>.
+          {supportEnabled() && (
+            <>
+              {' '}If it helps you, you can <Link to="/support" className="underline">support Quiver</Link>.
+            </>
+          )}
         </p>
         <SocialLinks />
       </section>

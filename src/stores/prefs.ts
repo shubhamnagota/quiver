@@ -9,6 +9,10 @@ interface PrefsState {
   theme: Theme;
   favorites: string[];
   recents: string[];
+  /** Tool opens, for the one-time thank-you; never leaves the browser. */
+  toolUses: number;
+  thanked: boolean;
+  markThanked: () => void;
   setTheme: (theme: Theme) => void;
   toggleFavorite: (id: string) => void;
   moveFavorite: (id: string, direction: -1 | 1) => void;
@@ -17,7 +21,7 @@ interface PrefsState {
   reset: () => void;
 }
 
-const defaults = { theme: 'dark' as Theme, favorites: [] as string[], recents: [] as string[] };
+const defaults = { theme: 'dark' as Theme, favorites: [] as string[], recents: [] as string[], toolUses: 0, thanked: false };
 
 const isStringArray = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every((x) => typeof x === 'string');
@@ -43,7 +47,8 @@ export const usePrefs = create<PrefsState>()(
           return { favorites };
         }),
       addRecent: (id) =>
-        set((s) => ({ recents: [id, ...s.recents.filter((r) => r !== id)].slice(0, MAX_RECENTS) })),
+        set((s) => ({ recents: [id, ...s.recents.filter((r) => r !== id)].slice(0, MAX_RECENTS), toolUses: s.toolUses + 1 })),
+      markThanked: () => set({ thanked: true }),
       importPrefs: (data) => {
         if (typeof data !== 'object' || data === null) throw new Error('Settings file is not an object');
         const d = data as Record<string, unknown>;
@@ -57,7 +62,7 @@ export const usePrefs = create<PrefsState>()(
     }),
     {
       name: 'quiver-prefs',
-      partialize: ({ theme, favorites, recents }) => ({ theme, favorites, recents }),
+      partialize: ({ theme, favorites, recents, toolUses, thanked }) => ({ theme, favorites, recents, toolUses, thanked }),
     },
   ),
 );

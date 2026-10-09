@@ -1,6 +1,6 @@
 import { Download, Monitor, Moon, Sun, Trash2, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { SocialLinks } from '@/components/Credits';
+import { SocialLinks, SupportLink } from '@/components/Credits';
 import { InstallApp } from '@/components/InstallApp';
 import { cn } from '@/lib/utils';
 import { usePrefs, type Theme } from '@/stores/prefs';
@@ -115,6 +115,7 @@ export function Settings() {
 
       <footer className="space-y-2 border-t border-border pt-6 text-xs text-muted-foreground md:hidden">
         <p>Made with ❤️ by Shubham</p>
+        <SupportLink />
         <SocialLinks />
       </footer>
     </div>

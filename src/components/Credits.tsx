@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Globe } from 'lucide-react';
-import { AUTHOR } from '@/config';
+import { AUTHOR, supportEnabled } from '@/config';
 
 function GitHubIcon() {
   return (
@@ -43,6 +43,18 @@ export function SocialLinks() {
   );
 }
 
+/** "Support Quiver", only when a donation method is configured. */
+export function SupportLink() {
+  if (!supportEnabled()) return null;
+  return (
+    <p>
+      <Link to="/support" className="underline-offset-2 hover:underline">
+        Support Quiver
+      </Link>
+    </p>
+  );
+}
+
 export function Footer() {
   return (
     <footer className="space-y-2 text-xs text-muted-foreground">
@@ -52,6 +64,7 @@ export function Footer() {
           {AUTHOR.name}
         </Link>
       </p>
+      <SupportLink />
       <SocialLinks />
     </footer>
   );

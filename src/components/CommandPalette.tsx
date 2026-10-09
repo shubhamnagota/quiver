@@ -1,8 +1,10 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Command } from 'cmdk';
-import { ArrowUpRight, Check, Info, House, Settings, Star, Zap } from 'lucide-react';
+import { ArrowUpRight, Check, Heart, Info, House, Settings, Star, Zap } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { supportEnabled } from '@/config';
 import { handOff } from '@/lib/handoff';
+import { paletteScore } from '@/lib/paletteScore';
 import { quickAnswers } from '@/lib/quick';
 import { usePalette } from '@/stores/palette';
 import { usePrefs } from '@/stores/prefs';
@@ -61,6 +63,7 @@ export function CommandPalette() {
       open={open}
       onOpenChange={(o) => (o ? setOpen(true) : close())}
       label="Command palette"
+      filter={paletteScore}
       overlayClassName="fixed inset-0 z-40 bg-black/50"
       contentClassName="fixed inset-x-3 top-[12vh] z-50 mx-auto max-w-xl overflow-hidden rounded-xl border border-border bg-background shadow-2xl"
     >
@@ -153,6 +156,11 @@ export function CommandPalette() {
           <Command.Item value="About" keywords={['credits', 'shubham']} onSelect={() => go('/about')} className={itemClass}>
             <Info className="size-4 text-muted-foreground" /> About Quiver
           </Command.Item>
+          {supportEnabled() && (
+            <Command.Item value="Support Quiver" keywords={['donate', 'support', 'sponsor', 'coffee', 'tip', 'crypto']} onSelect={() => go('/support')} className={itemClass}>
+              <Heart className="size-4 text-muted-foreground" /> Support Quiver
+            </Command.Item>
+          )}
         </Command.Group>
       </Command.List>
     </Command.Dialog>

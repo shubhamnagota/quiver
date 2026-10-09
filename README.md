@@ -4,7 +4,7 @@
 
 Quiver is a private, offline-capable toolbox for fintech engineers: JSON, JWTs, epochs, hashes, IBANs, EMV QR codes, FX and more, all reachable from a ⌘K command palette. It runs entirely in the browser. There is no backend and no account, and tokens, payloads and keys never leave your device.
 
-By [Shubham](https://github.com/shubhamnagota) · MIT licensed
+By [Shubham](https://shubhamnagota.com) · [quiver.shubhamnagota.com](https://quiver.shubhamnagota.com) · MIT licensed
 
 ## Features
 
@@ -39,6 +39,10 @@ By [Shubham](https://github.com/shubhamnagota) · MIT licensed
 
 More are on the way: JSON diff, cron explainer, regex tester, card BIN/Luhn, QR generator and others.
 
+## Support
+
+Quiver is free and has no ads or tracking. Donations are optional and never interrupt work: there's a "Support Quiver" link in the footer and a `/support` page (palette: "donate"), plus one dismissible thank-you after the 50th tool use. Methods are configured in `src/config.ts` (`SUPPORT`); anything left empty is hidden, and a unit test rejects any crypto address whose checksum doesn't match its network.
+
 ## Getting started
 
 ```sh
@@ -58,7 +62,7 @@ CI runs lint, typecheck, tests and build on every push and pull request.
 
 ## Deploying
 
-`npm run build` produces a static site in `dist/`. It deploys as is to Cloudflare Pages (headers from `public/_headers`, SPA routing built in) or Vercel (`vercel.json` adds the headers and SPA rewrite). No environment variables or server are needed.
+`npm run build` produces a static site in `dist/`. Production is Cloudflare Pages at [quiver.shubhamnagota.com](https://quiver.shubhamnagota.com). It deploys as is to Cloudflare Pages (headers from `public/_headers`, SPA routing built in) or Vercel (`vercel.json` adds the headers and SPA rewrite). No environment variables or server are needed.
 
 Lighthouse (mobile, M4 build): Performance 95–99, Accessibility 100, Best Practices 100, SEO 100.
 

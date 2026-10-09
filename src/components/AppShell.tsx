@@ -9,6 +9,7 @@ import { BottomNav } from './BottomNav';
 import { Logo } from './Logo';
 import { OfflineBadge, PwaPrompts } from './PwaPrompts';
 import { Sidebar } from './Sidebar';
+import { ThankYou } from './ThankYou';
 import { ThemeSync } from './ThemeSync';
 
 /** Paste anywhere outside a field: if a tool recognises it, open that tool with the input. */
@@ -84,6 +85,7 @@ export function AppShell() {
       <BottomNav />
       <Suspense fallback={null}>{paletteMounted && <CommandPalette />}</Suspense>
       <PwaPrompts />
+      <ThankYou />
     </div>
   );
 }

@@ -28,6 +28,14 @@ describe('prefs store', () => {
     expect(new Set(state().recents).size).toBe(MAX_RECENTS);
   });
 
+  it('counts tool uses and remembers the thank-you', () => {
+    state().addRecent('a');
+    state().addRecent('a');
+    expect(state().toolUses).toBe(2);
+    state().markThanked();
+    expect(state().thanked).toBe(true);
+  });
+
   it('imports only valid fields', () => {
     state().importPrefs({ theme: 'light', favorites: ['x'], recents: 'bad' });
     expect(state().theme).toBe('light');

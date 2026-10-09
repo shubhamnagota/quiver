@@ -16,6 +16,10 @@ Browser-only utilities app. No backend, no accounts; data never leaves the brows
 - `csp.ts` defines the Content Security Policy. A new network host must be added to `CONNECT_HOSTS` there, then copied into `public/_headers` and `vercel.json` (the hosting test fails until they match).
 - Never add inline scripts or third-party scripts; the only inline script is the theme bootstrap, allowed by hash.
 
+## Config
+
+- `src/config.ts` holds the site URL, author links and donation methods. Never invent donation handles or wallet addresses; they come from the owner. Empty values are hidden.
+
 ## Adding a tool
 
 Create `src/tools/<id>/` with `manifest.ts` (default export a `ToolManifest`), the component, and pure logic in `lib.ts` with a `lib.test.ts`. The registry picks it up automatically; never edit shell code to add a tool.
