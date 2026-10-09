@@ -29,7 +29,7 @@ By [Shubham](https://github.com/shubhamnagota) · MIT licensed
 | Epoch converter | s/ms/µs/ns auto-detect, Dubai/IST/UTC side by side, relative time, date → epoch |
 | Hash and HMAC | MD5, SHA-1/256/384/512, HMAC in hex or base64, webhook signature check |
 | UUID generator | Bulk v4 UUIDs |
-| EMV QR parser | Parse merchant-presented EMV QR payloads into a field tree, verify CRC16, generate valid codes as SVG |
+| EMV QR parser | Parse merchant-presented EMV QR payloads into a field tree, verify CRC16, generate valid codes as SVG. Upload, drop or paste a QR image: it's decoded on the device (native `BarcodeDetector`, else [jsQR](https://github.com/cozmo/jsQR)) |
 | IBAN validator | mod-97 check, country length rules, bank and branch codes, grouped formatting |
 | FX converter | One amount to many currencies, math in the amount field, pinned rate pairs |
 | Remittance comparator | Up to 4 provider quotes vs mid-market: amount received, effective rate, markup |

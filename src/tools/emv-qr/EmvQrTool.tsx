@@ -1,11 +1,13 @@
-import { Download } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Download, ImageUp, LoaderCircle } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
 import { renderSVG } from 'uqr';
 import { CopyButton } from '@/components/CopyButton';
 import { ActionsBar } from '@/components/tool/ActionsBar';
 import { buttonClass, ErrorMessage, Panel, Segmented, Split, TextArea } from '@/components/tool/Panel';
 import { useToolInput } from '@/components/tool/useToolInput';
+import { isTyping } from '@/lib/keyboard';
 import { cn } from '@/lib/utils';
+import { decodeQrImage, imageFrom } from './decodeImage';
 import { buildEmvQr, CURRENCY_NUMERIC, parseEmvQr, SPEC_SAMPLE, validateQrInput, type QrInput, type Tlv } from './lib';
 
 type Mode = 'parse' | 'generate';
@@ -42,8 +44,100 @@ function FieldList({ fields }: { fields: Tlv[] }) {
   );
 }
 
+type Upload = { state: 'decoding'; name: string } | { state: 'done'; name: string } | { state: 'error'; name: string; message: string } | null;
+
+/** Upload, drop or paste a QR image; it is decoded in the browser and never leaves the device. */
+function useQrUpload(onText: (text: string) => void) {
+  const [upload, setUpload] = useState<Upload>(null);
+  const [dragging, setDragging] = useState(false);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const onTextRef = useRef(onText);
+  useEffect(() => {
+    onTextRef.current = onText;
+  });
+
+  const decode = useMemo(
+    () => async (file: File) => {
+      const name = file.name || 'pasted image';
+      setUpload({ state: 'decoding', name });
+      try {
+        onTextRef.current((await decodeQrImage(file)).trim());
+        setUpload({ state: 'done', name });
+      } catch (e) {
+        setUpload({ state: 'error', name, message: (e as Error).message });
+      }
+    },
+    [],
+  );
+
+  // Paste a screenshot anywhere on the page (outside other fields) or into the payload box.
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const file = imageFrom(e.clipboardData);
+      if (!file) return;
+      const target = e.target as HTMLElement | null;
+      if (isTyping(target) && target?.getAttribute('aria-label') !== 'EMV QR payload') return;
+      e.preventDefault();
+      void decode(file);
+    };
+    document.addEventListener('paste', onPaste);
+    return () => document.removeEventListener('paste', onPaste);
+  }, [decode]);
+
+  const dropProps = {
+    onDragOver: (e: DragEvent) => {
+      if (!Array.from(e.dataTransfer.items).some((i) => i.type.startsWith('image/'))) return;
+      e.preventDefault();
+      setDragging(true);
+    },
+    onDragLeave: (e: DragEvent) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
+    },
+    onDrop: (e: DragEvent) => {
+      const file = imageFrom(e.dataTransfer);
+      setDragging(false);
+      if (!file) return;
+      e.preventDefault();
+      void decode(file);
+    },
+  };
+
+  const button = (
+    <>
+      <button type="button" onClick={() => fileInput.current?.click()} className={buttonClass} disabled={upload?.state === 'decoding'}>
+        {upload?.state === 'decoding' ? <LoaderCircle className="size-3.5 animate-spin" /> : <ImageUp className="size-3.5" />}
+        Upload QR image
+      </button>
+      <input
+        ref={fileInput}
+        type="file"
+        accept="image/*"
+        aria-label="QR image file"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void decode(file);
+          e.target.value = '';
+        }}
+      />
+    </>
+  );
+
+  const status =
+    upload?.state === 'decoding' ? (
+      <p role="status" className="mt-3 text-sm text-muted-foreground">Reading {upload.name}…</p>
+    ) : upload?.state === 'done' ? (
+      <p role="status" className="mt-3 text-sm text-muted-foreground">Read from {upload.name}, decoded on this device.</p>
+    ) : upload?.state === 'error' ? (
+      <div className="mt-3"><ErrorMessage>{upload.name}: {upload.message}</ErrorMessage></div>
+    ) : null;
+
+  return { button, status, dropProps, dragging, clear: () => setUpload(null) };
+}
+
 function Parser() {
   const [input, setInput] = useToolInput('emv-qr');
+  const upload = useQrUpload(setInput);
   const parsed = useMemo(() => {
     if (!input.trim()) return null;
     try {
@@ -57,17 +151,25 @@ function Parser() {
 
   return (
     <div>
-      <ActionsBar toolId="emv-qr" input={input} output={output} onClear={() => setInput('')} onSample={() => setInput(SPEC_SAMPLE)} />
+      <ActionsBar toolId="emv-qr" input={input} output={output} onClear={() => { setInput(''); upload.clear(); }} onSample={() => { setInput(SPEC_SAMPLE); upload.clear(); }} />
       <Split>
-        <Panel title="Payload">
-          <TextArea label="EMV QR payload" value={input} onChange={setInput} placeholder="000201010211…6304XXXX" rows={8} invalid={!!parsed && 'error' in parsed} />
-          {parsed && 'error' in parsed && <div className="mt-3"><ErrorMessage>{parsed.error}</ErrorMessage></div>}
-          {qr && !qr.crc.valid && (
-            <p className="mt-3 text-sm text-muted-foreground">
-              Correct payload: <span className="font-mono break-all">{input.trim().replace(/[0-9A-Fa-f]{4}$/, qr.crc.expected)}</span>
-            </p>
+        <div {...upload.dropProps} className="relative min-w-0">
+          <Panel title="Payload" actions={upload.button} className="h-full">
+            <TextArea label="EMV QR payload" value={input} onChange={setInput} placeholder="Paste a payload, or upload, drop or paste a QR image" rows={8} invalid={!!parsed && 'error' in parsed} />
+            {upload.status}
+            {parsed && 'error' in parsed && <div className="mt-3"><ErrorMessage>{parsed.error}</ErrorMessage></div>}
+            {qr && !qr.crc.valid && (
+              <p className="mt-3 text-sm text-muted-foreground">
+                Correct payload: <span className="font-mono break-all">{input.trim().replace(/[0-9A-Fa-f]{4}$/, qr.crc.expected)}</span>
+              </p>
+            )}
+          </Panel>
+          {upload.dragging && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/90 text-sm font-medium">
+              Drop the QR image to read it
+            </div>
           )}
-        </Panel>
+        </div>
         <Panel
           title="Fields"
           actions={qr && (
