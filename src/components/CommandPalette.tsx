@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import { Command } from 'cmdk';
-import { ArrowUpRight, Check, Heart, Info, House, Settings, Star, Zap } from 'lucide-react';
+import { ArrowUpRight, Check, Heart, Info, House, Settings, Sparkles, Star, Zap } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { supportEnabled } from '@/config';
 import { handOff } from '@/lib/handoff';
@@ -155,6 +155,9 @@ export function CommandPalette() {
           </Command.Item>
           <Command.Item value="About" keywords={['credits', 'shubham']} onSelect={() => go('/about')} className={itemClass}>
             <Info className="size-4 text-muted-foreground" /> About Quiver
+          </Command.Item>
+          <Command.Item value="What's new" keywords={['changelog', 'release notes', 'version', 'updates']} onSelect={() => go('/changelog')} className={itemClass}>
+            <Sparkles className="size-4 text-muted-foreground" /> What's new
           </Command.Item>
           {supportEnabled() && (
             <Command.Item value="Support Quiver" keywords={['donate', 'support', 'sponsor', 'coffee', 'tip', 'crypto']} onSelect={() => go('/support')} className={itemClass}>

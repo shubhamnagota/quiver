@@ -64,6 +64,11 @@ export function Footer() {
           {AUTHOR.name}
         </Link>
       </p>
+      <p>
+        <Link to="/changelog" className="underline-offset-2 hover:underline">
+          What's new
+        </Link>
+      </p>
       <SupportLink />
       <SocialLinks />
     </footer>

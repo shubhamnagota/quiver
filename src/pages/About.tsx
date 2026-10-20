@@ -22,7 +22,8 @@ export function About() {
       <section>
         <h2 className="mb-2 font-medium">Made by {AUTHOR.name}</h2>
         <p className="mb-3 text-muted-foreground">
-          Source on <a href={AUTHOR.repo} target="_blank" rel="noreferrer" className="underline">GitHub</a>.
+          Source on <a href={AUTHOR.repo} target="_blank" rel="noreferrer" className="underline">GitHub</a>. See{' '}
+          <Link to="/changelog" className="underline">what's new</Link> in each version.
           {supportEnabled() && (
             <>
               {' '}If it helps you, you can <Link to="/support" className="underline">support Quiver</Link>.
