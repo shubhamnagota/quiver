@@ -64,6 +64,10 @@ Quiver puts JSON, JWTs, epochs, hashes, IBANs, EMV QR codes, FX and more behind 
 
 More are on the way: JSON diff, cron explainer, regex tester, card BIN/Luhn, QR generator and others.
 
+## Changelog
+
+What's new in each release is in [CHANGELOG.md](CHANGELOG.md).
+
 ## Support
 
 Quiver is free and has no ads or tracking. Donations are optional and never interrupt work: there's a "Support Quiver" link in the footer and a `/support` page (palette: "donate"), plus one dismissible thank-you after the 50th tool use. Methods are configured in `src/config.ts` (`SUPPORT`); anything left empty is hidden, and a unit test rejects any crypto address whose checksum doesn't match its network.
