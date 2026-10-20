@@ -4,8 +4,11 @@ Notable changes to Quiver, newest first. The format follows [Keep a Changelog](h
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-20
+
 ### Added
 
+- **What's new** page in the app (`/changelog`), linked from the footer, the About page and the command palette.
 - **Split bills** tool (Life): Splitwise-style groups saved in this browser. Split equally, by exact amounts, by percentage or by shares; record settle-up payments; see the fewest payments needed to settle.
 - Split bills keeps balances separate per currency. **Convert** rewrites every bill in one currency at editable mid-market rates, keeps each bill's original amount and rate, and the latest conversion can be undone.
 - Split bills extras: categories with spend breakdown, paid and share per person, search and filters by person, category and month, undo after deleting, archiving settled groups, copy a summary for chat, CSV export, and JSON export/import to share a group.

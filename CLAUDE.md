@@ -9,7 +9,8 @@ Browser-only utilities app. No backend, no accounts; data never leaves the brows
 ## Changelog
 
 - Every user-visible change (new tool or feature, behaviour change, user-facing fix) adds a line to `CHANGELOG.md` under `## [Unreleased]`, in the same commit, under `Added`, `Changed`, `Fixed` or `Removed`. Write for users, not about code; internal refactors, tests and CI changes don't go in.
-- On a release, rename `[Unreleased]` to `[x.y.z] - YYYY-MM-DD`, bump `version` in `package.json` to match, and start a new empty `[Unreleased]`.
+- On a release, rename `[Unreleased]` to `[x.y.z] - YYYY-MM-DD`, bump the version with `npm version x.y.z --no-git-tag-version`, and start a new empty `[Unreleased]`.
+- The in-app What's new page (`/changelog`) renders `CHANGELOG.md` directly, so keep to its format: `### Added`-style sections and `- ` items, with `**bold**`, `` `code` `` and https links only. `src/lib/changelog.test.ts` fails if the latest release doesn't match `package.json`.
 
 ## Commands
 

@@ -34,6 +34,7 @@ const categoryRoute = createRoute({
 const supportRoute = createRoute({ getParentRoute: () => rootRoute, path: '/support', component: lazyRouteComponent(() => import('./pages/Support'), 'Support') });
 const savedRoute = createRoute({ getParentRoute: () => rootRoute, path: '/saved', component: lazyRouteComponent(() => import('./pages/Saved'), 'Saved') });
 const settingsRoute = createRoute({ getParentRoute: () => rootRoute, path: '/settings', component: lazyRouteComponent(() => import('./pages/Settings'), 'Settings') });
+const changelogRoute = createRoute({ getParentRoute: () => rootRoute, path: '/changelog', component: lazyRouteComponent(() => import('./pages/Changelog'), 'Changelog') });
 const aboutRoute = createRoute({ getParentRoute: () => rootRoute, path: '/about', component: lazyRouteComponent(() => import('./pages/About'), 'About') });
 
 const routeTree = rootRoute.addChildren([
@@ -43,6 +44,7 @@ const routeTree = rootRoute.addChildren([
   savedRoute,
   settingsRoute,
   aboutRoute,
+  changelogRoute,
   supportRoute,
 ]);
 
