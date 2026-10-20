@@ -57,6 +57,7 @@ Quiver puts JSON, JWTs, epochs, hashes, IBANs, EMV QR codes, FX and more behind 
 | IBAN validator | mod-97 check, country length rules, bank and branch codes, grouped formatting |
 | FX converter | One amount to many currencies, math in the amount field, pinned rate pairs |
 | Remittance comparator | Up to 4 provider quotes vs mid-market: amount received, effective rate, markup |
+| Split bills | Splitwise-style groups: equal, exact, % or share splits, who-pays-whom, balances per currency with one-click conversion, categories, filters, CSV and JSON export/import |
 | World clock | Dubai and India by default, add any city, meeting planner with working-hours overlap |
 | Text utilities | Case conversion, counts, dedupe, sort, trim, slugify |
 | Scratchpad | Multiple Markdown pads with preview, autosaved in the browser |
